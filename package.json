@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-upgrade",
   "description": "your koishi should be updated",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,13 +9,22 @@
     "dist"
   ],
   "license": "MIT",
+  "koishi": {
+    "description": {
+      "zh": "你说得对，但是 Koishi 是一款你的问题。你的 Koishi 该升级了"
+    }
+  },
   "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
+  "devDependencies": {
+    "@koishijs/client": "^5.8.3",
+    "@koishijs/plugin-console": "^5.8.3"
+  },
   "peerDependencies": {
-    "koishi": "4.12.7"
+    "koishi": "4.12.0"
   }
 }
