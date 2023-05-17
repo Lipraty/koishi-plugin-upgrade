@@ -2,7 +2,7 @@
   "name": "koishi-plugin-upgrade",
   "homepage": "https://github.com/Lipraty/koishi-plugin-upgrade",
   "description": "your koishi should be updated",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -12,7 +12,7 @@
   "license": "MIT",
   "koishi": {
     "description": {
-      "zh": "你说得对，但是 Koishi 是一款你的问题。你的 Koishi 该升级了"
+      "zh": "你说得对，但是 Koishi 是一款你的问题：你的 Koishi 该升级了"
     }
   },
   "scripts": {},
@@ -26,6 +26,8 @@
     "@koishijs/plugin-console": "^5.8.3"
   },
   "peerDependencies": {
-    "koishi": "4.12.0"
+    "koishi": "4.12.0",
+    "@koishijs/client": "^5.0.0",
+    "@koishijs/plugin-console": "^5.0.0"
   }
 }

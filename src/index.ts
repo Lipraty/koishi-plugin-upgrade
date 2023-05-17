@@ -13,6 +13,7 @@ declare module '@koishijs/plugin-console' {
   }
   interface Events {
     'upgrader'(target: string): void
+    'gfmark'(text: string, ua: string): Promise<string>
   }
 }
 
@@ -39,6 +40,16 @@ class UpgradeProvider extends DataService<UpgradeData> {
 
     ctx.console.addListener('upgrader', async (target: string) => {
       return this.upgradeKoishi(ctx, target)
+    })
+
+    ctx.console.addListener('gfmark', async (text: string, ua: string) => {
+      return await ctx.http<string>('POST', 'https://api.github.com/markdown', {
+        headers: { 'user-agent': ua },
+        data: {
+          mode: 'gfm',
+          text
+        }
+      })
     })
   }
 
