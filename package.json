@@ -12,7 +12,9 @@
   "license": "MIT",
   "koishi": {
     "description": {
-      "zh": "你说得对，但是 Koishi 是一款你的问题：你的 Koishi 该升级了"
+      "zh": "你说得对，但是 Koishi 是一款你的问题：你的 Koishi 该升级了。",
+      "en": "All right but 'koishi' is your problem: koishi should be update.",
+      "ja": "本当にすみません、これはあなたの問題です：あなたの Koishi はアップグレードする必要があります。"
     }
   },
   "scripts": {},
@@ -22,6 +24,7 @@
     "plugin"
   ],
   "devDependencies": {
+    "koishi": "^4.12.9",
     "@koishijs/client": "^5.8.3",
     "@koishijs/plugin-console": "^5.8.3"
   },
