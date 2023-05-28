@@ -1,9 +1,11 @@
-import { Context, Plugin, Schema, version } from 'koishi'
+import { Context, Plugin, Schema, version as kVersion } from 'koishi'
+import { version as pVersion } from '../package.json'
 import { DataService } from '@koishijs/plugin-console'
 import { } from '@koishijs/plugin-market'
 import { resolve } from 'node:path'
 import which from 'which-pm-runs'
 import { Latest } from './types'
+import { Dict } from 'koishi'
 
 declare module '@koishijs/plugin-console' {
   namespace Console {
@@ -12,52 +14,68 @@ declare module '@koishijs/plugin-console' {
     }
   }
   interface Events {
-    'upgrader'(target: string): void
-    'gfmark'(text: string, ua: string): Promise<string>
+    'upgrade/install'(deps: Dict<string>): void
+    'upgrade/markd'(text: string, ua: string): Promise<string>
+    'upgrade/latest'(name: string): Promise<UpgradeData>
   }
+}
+
+export interface UpgradeData {
+  name: string
+  version: string,
+  latest: string,
+  changelog: string
+}
+
+const verMap = {
+  koishi: kVersion,
+  upgrade: pVersion
 }
 
 export const name = 'upgrade'
 
 export const usage = `
 这里空空如也，也许你应该看看左下角有没有 Koishi 更新。
+
+如果你在日志中看到了 Timeout 的报错，也许你应该为你的 Koishi 配置一个代理。
 `
 
 export interface Config { }
 
 export const Config: Schema<Config> = Schema.object({})
 
-export interface UpgradeData {
-  version: string,
-  latest: string,
-  changelog: string
-}
-
 class UpgradeProvider extends DataService<UpgradeData> {
   static using = ['console.dependencies'] as const
   constructor(ctx: Context, private config: Config) {
     super(ctx, 'upgrade')
 
-    ctx.console.addListener('upgrader', async (target: string) => {
-      return this.upgradeKoishi(ctx, target)
+    ctx.console.addListener('upgrade/install', async (deps: Dict<string>) => {
+      return this.upgradeDeps(ctx, deps)
     })
 
-    ctx.console.addListener('gfmark', async (text: string, ua: string) => {
-      return await ctx.http<string>('POST', 'https://api.github.com/markdown', {
+    ctx.console.addListener('upgrade/latest', async (name): Promise<UpgradeData> => {
+      const release = await this.ctx.http<Latest>('GET', 'https://api.github.com/repos/koishijs/koishi/releases/latest')
+      const latest = release.tag_name
+      const changelog = release.body
+      return { name, latest, changelog, version: verMap[name] }
+    })
+
+    ctx.console.addListener('upgrade/markd',
+      async (text: string, ua: string) => await ctx.http<string>('POST', 'https://api.github.com/markdown', {
         headers: { 'user-agent': ua },
         data: {
           mode: 'gfm',
           text
         }
       })
-    })
+    )
   }
 
-  async upgradeKoishi(ctx: Context, target: string) {
+  getVersion(name: string) { }
+
+  async upgradeDeps(ctx: Context, deps: Dict<string>) {
     const installer = ctx.console.dependencies
-    await installer.override({
-      'koishi': target,
-    })
+    await installer.override(deps)
     const args: string[] = []
     const agent = which().name || 'npm'
     if (agent !== 'yarn') {
@@ -72,7 +90,7 @@ class UpgradeProvider extends DataService<UpgradeData> {
     const release = await this.ctx.http<Latest>('GET', 'https://api.github.com/repos/koishijs/koishi/releases/latest')
     const latest = release.tag_name
     const changelog = release.body
-    return { version, latest, changelog }
+    return
   }
 }
 

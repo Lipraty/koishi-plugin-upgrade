@@ -54,3 +54,39 @@ interface Reactions {
     rocket: number
     eyes: number
 }
+
+/**
+ * Registry type for npmjs
+ */
+export interface Registry {
+    _id: string
+    _rev: string
+    name: string
+    "dist-tags": DistTags
+    versions: Record<string, string>
+    time: Record<string, string>
+    maintainers: Maintainer[]
+    author: RegistryAuthor
+    license: string
+    readme: string
+    readmeFilename: string
+    homepage: string
+    description: string
+    keywords: string[]
+    [x: string]: any
+}
+
+export interface DistTags {
+    latest: string
+    next: string
+}
+
+export interface RegistryAuthor {
+    name: string
+    email: string
+}
+
+export interface Maintainer {
+    name: string
+    email: string
+}
