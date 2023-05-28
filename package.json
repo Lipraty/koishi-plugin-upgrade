@@ -2,7 +2,7 @@
   "name": "koishi-plugin-upgrade",
   "homepage": "https://github.com/Lipraty/koishi-plugin-upgrade",
   "description": "your koishi should be updated",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -24,9 +24,9 @@
     "plugin"
   ],
   "devDependencies": {
-    "koishi": "^4.12.9",
-    "@koishijs/client": "^5.8.3",
-    "@koishijs/plugin-console": "^5.8.3"
+    "koishi": "^4.13.0",
+    "@koishijs/client": "^5.10.0",
+    "@koishijs/plugin-console": "^5.10.0"
   },
   "peerDependencies": {
     "koishi": "^4.12.0",
