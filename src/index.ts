@@ -1,7 +1,6 @@
 import { Context, Dict, Plugin, Schema, version as kVersion } from 'koishi'
 import { DataService } from '@koishijs/plugin-console'
 import { } from '@koishijs/plugin-market'
-import { gt } from 'semver'
 import { resolve } from 'node:path'
 import { version as pVersion } from '../package.json'
 import { Latest } from './types'
