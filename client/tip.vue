@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUpdated, onMounted } from 'vue'
+import { ref, onUpdated, onMounted, onBeforeUnmount } from 'vue'
 import { send } from '@koishijs/client'
 import { ElLoading } from 'element-plus'
 import Loading from './icons/loading.vue'
@@ -44,6 +44,7 @@ const changelog = ref<string>()
 
 const old = ref(false)
 let upgradeData: UpgradeData
+let polling
 
 onMounted(() => send('upgrade/latest', 'koishi').then(setData))
 onUpdated(() => send('upgrade/latest', 'koishi').then(setData))
@@ -73,12 +74,27 @@ const install = () => {
   upLoading.value = true
   const loading = ElLoading.service({
     lock: true,
-    text: `你的 ${upgradeData.name} 正在升级...`,
+    text: `你的 ${updata.value.name} 正在升级...`,
     background: 'rgba(0, 0, 0, 0.7)',
   })
+  setTimeout(() => {
+    loading.setText('等待 Koishi 重启...')
+    loading.background.value = 'rgba(0, 0, 0, 0.95)'
+  }, 5000)
   send('upgrade/install', {
-    [upgradeData.name]: upgradeData.latest
+    [updata.value.name]: updata.value.latest
   })
+  polling = setInterval(() => {
+    fetch('/api/upgrade/status')
+      .then(res => res.json())
+      .then(data => {
+        if (data.alive) {
+          loading.close()
+          clearInterval(polling)
+          window.location.reload()
+        }
+      })
+  }, 5000)
 }
 </script>
 
